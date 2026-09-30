@@ -69,6 +69,53 @@ app.post('/api/login', async (req, res) => {
   res.json(rows[0]);
 });
 
+app.post('/api/interesses/:anuncio_id', async (req, res) => {
+  const { anuncio_id } = req.params;
+  const { cliente_nome, cliente_contato } = req.body;
+
+  if (!cliente_nome || !cliente_contato) {
+    return res.status(400).json({
+      erro: 'Nome e contato inválidos'
+    });
+  }
+
+  await pool.query(
+    `INSERT INTO interesses (anuncio_id, cliente_nome, cliente_contato)
+    VALUES ($1, $2, $3)`,
+    [anuncio_id, cliente_nome, cliente_contato]
+  );
+
+  const { rows } = await pool.query(
+    `SELECT COUNT (*)::int AS total FROM interesses
+    WHERE anuncio_id = $1`,
+    [anuncio_id]
+  );
+
+  res.json({ interesses: rows[0].total });
+});
+
+app.get('api/perfil/:id', async (req, res) => {
+  const { id } = req.params;
+  const anuncios = await pool.query(
+    `SELECT a.id, a.titulo, a.localidade, a.preco, a.imagem, a.criado_em,
+    COUNT(i.id_interesse)::int AS interesses
+    FROM anuncios a LEFT JOIN interesses i 
+    ON i.anuncio_id = a.id
+    WHERE a.vendedor_id = $1 GROUP BY a.id ORDER BY a.criado_em DESC`,
+    [id]
+  );
+
+  const totalInteresses = anuncios.rows.reduce((acc, a) => {
+    (acc + a.interesses, 0);
+  });
+
+  res.json({
+    totalAnuncios: anuncios.rows.length,
+    totalInteresses,
+    anuncios: anuncios.rows,
+  });
+})
+
 app.listen(3000, () => {
   console.log(`API rodando em http://localhost:3000`);
 });
