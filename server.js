@@ -114,7 +114,24 @@ app.get('api/perfil/:id', async (req, res) => {
     totalInteresses,
     anuncios: anuncios.rows,
   });
-})
+});
+
+app.post('/api/mensagens/:anuncio_id', async (req, res) => {
+  const { anuncio_id } = req.params;
+  const { cliente_nome, cliente_contato, mensagem } = req.body;
+
+  if(!cliente_nome || !cliente_contato || !mensagem) {
+    return res.status(400).json({
+      erro: 'Nome, contato e mensagem são obrigatórios.'
+    });
+  }
+
+  await pool.query(
+    `INSERT INTO mensagens (anuncio_id, cliente_nome, cliente_contato, mensagem)
+    VALUES ($1, $2, $3, $4)`,
+    [anuncio_id, cliente_nome, cliente_contato, mensagem],
+  );
+});
 
 app.listen(3000, () => {
   console.log(`API rodando em http://localhost:3000`);
