@@ -24,14 +24,14 @@ app.get('/api/usuarios', async (req, res) => {
 
   let query = `
     SELECT 
-      a.id_usuario, a.titulo, a.localidade, a.preco, a.imagem, a.vendedor_id, a.criado_em,
+      a.id_anuncio, a.titulo, a.localidade, a.preco, a.imagem, a.vendedor_id, a.criado_em,
       u.nome AS vendedor, 
       u.usuario AS vendedor_usuario,
       u.telefone AS vendedor_telefone,   
       COUNT(i.id_interesse)::int AS interesses
     FROM anuncios a
     JOIN usuarios u ON u.id_usuario = a.vendedor_id
-    LEFT JOIN interesses i ON i.anuncio_id = a.id_usuario
+    LEFT JOIN interesses i ON i.anuncio_id = a.id_anuncio
     `;
 
   if (modelo) {
@@ -40,7 +40,7 @@ app.get('/api/usuarios', async (req, res) => {
   }
 
   // CORREÇÃO 3: Adicionado um espaço antes de 'GROUP BY' para não colar com o texto anterior
-  query += ' GROUP BY a.id_usuario, u.nome, u.usuario, u.telefone ORDER BY a.criado_em DESC';
+  query += ' GROUP BY a.id_anuncio, u.nome, u.usuario, u.telefone ORDER BY a.criado_em DESC';
 
   try {
     const { rows } = await pool.query(query, params);
@@ -56,7 +56,7 @@ app.get('/api/usuarios', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { usuario, senha } = req.body;
   const { rows } = await pool.query(
-    `SELECT id, nome, usuario, telefone, foto_perfil
+    `SELECT id_usuario, nome, usuario, telefone, foto_perfil
     FROM usuarios 
     WHERE usuario = $1 AND senha = $2`,
     [usuario, senha]
@@ -94,20 +94,18 @@ app.post('/api/interesses/:anuncio_id', async (req, res) => {
   res.json({ interesses: rows[0].total });
 });
 
-app.get('api/perfil/:id', async (req, res) => {
+app.get('/api/perfil/:id', async (req, res) => {
   const { id } = req.params;
   const anuncios = await pool.query(
-    `SELECT a.id, a.titulo, a.localidade, a.preco, a.imagem, a.criado_em,
+    `SELECT a.id_anuncio, a.titulo, a.localidade, a.preco, a.imagem, a.criado_em,
     COUNT(i.id_interesse)::int AS interesses
     FROM anuncios a LEFT JOIN interesses i 
-    ON i.anuncio_id = a.id
-    WHERE a.vendedor_id = $1 GROUP BY a.id ORDER BY a.criado_em DESC`,
+    ON i.anuncio_id = a.id_anuncio
+    WHERE a.vendedor_id = $1 GROUP BY a.id_anuncio ORDER BY a.criado_em DESC`,
     [id]
   );
 
-  const totalInteresses = anuncios.rows.reduce((acc, a) => {
-    (acc + a.interesses, 0);
-  });
+  const totalInteresses = anuncios.rows.reduce((acc, a) => acc + a.interesses, 0);
 
   res.json({
     totalAnuncios: anuncios.rows.length,
@@ -131,6 +129,8 @@ app.post('/api/mensagens/:anuncio_id', async (req, res) => {
     VALUES ($1, $2, $3, $4)`,
     [anuncio_id, cliente_nome, cliente_contato, mensagem],
   );
+
+  res.json({ sucesso: 'Mensagem enviada com sucesso.' });
 });
 
 app.listen(3000, () => {
