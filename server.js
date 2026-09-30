@@ -21,6 +21,7 @@ app.get('/api/usuarios', async (req, res) => {
 
     // CORREÇÃO 1: Adicionada a vírgula após a.criado_em
     // CORREÇÃO 2: Ajustado o ON do interesses (geralmente aponta para o id do anúncio, não do usuário)
+    
     let query = `
     SELECT 
       a.id_usuario, a.titulo, a.localidade, a.preco, a.imagem, a.vendedor_id, a.criado_em,
