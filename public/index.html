@@ -37,5 +37,29 @@
         </div>
         <span>Copyright © 2026-2027 </span>
     </footer>
+
+    <dialog id="modalLogin" class="overlay oculto">
+        <div class="modal">
+            <div class="modal-topo">
+                <h2>Login</h2>
+                <button id="fecharModal" class="btn-fechar">x</button>
+            </div>
+
+            <label for="loginUsuario"></label>
+            <input type="text" name="loginUsuario" id="loginUsuario" placeholder="Digite seu nome">
+            <span id="erroUsuario" class="erro"></span>
+            
+            <label for="loginSenha"></label>
+            <input type="password" name="loginSenha" id="loginSenha" placeholder="Digite sua senha">
+            <span id="erroSenha" class="erro"></span>
+            
+            <span id="erroLogin" class="erro"></span>
+
+            <div class="modal-botoes">
+                <button id="btnCancelar" class="btn-outline">Cancelar</button>
+                <button id="btnConfirmarLogin" class="btn-preto">Login</button>
+            </div>
+        </div>
+    </dialog>
 </body>
 </html>
