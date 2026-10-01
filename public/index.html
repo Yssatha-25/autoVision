@@ -97,5 +97,22 @@
 
         <div id="listarAnunciosPerfil"></div>
     </aside>
+
+    <dialog id="modalInteresse" class="overlay oculto">
+        <div class="modal">
+            <div class="modal-topo">
+                <h2>Tenho interesse</h2>
+                <button id="fecharModalInteresse" class="btn-fechar">x</button>
+            </div>
+
+            <input type="text" id="interesseNome" placeholder="Digite seu nome">
+            <input type="text" id="interesseContato" placeholder="Digite seu telefone ou e-mail">
+            <span id="erroInteresse" class="erro"></span>
+            <div class="modal-botoes">
+                <button id="btnCancelarInteresse" class="btn-outline">Cancelar</button>
+                <button id="btnConfirmarInteresse" class="btn-preto">Confirmar</button>
+            </div>
+        </div>
+    </dialog>
 </body>
 </html>
