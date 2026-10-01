@@ -61,5 +61,41 @@
             </div>
         </div>
     </dialog>
+
+    <aside id="painelPerfil" class="painel-lateral oculto">
+        <div class="painel-topo" class="btn-fechar">x</div>
+        <p><span id="totaInteressados">0</span> Interessados</p>
+        <p><span id="totalAnuncios">0</span> Anúncios</p>
+        <button id="btnSeusAnuncios" class="btn-destaque">Seus anúncios</button>
+
+        <form id="formCadastro" enctype="multipart/form-data" novalidate>
+            <div class="grupo-input">
+                <label for="campoTitulo">Título do Anúncio</label>
+                <input id="campoTitulo" name="campoTitulo" placeholder="ex.: Honda Civic EXL 2020">
+                <span id="erroTitulo" class="msg-erro"></span>
+            </div>
+
+            <div class="grupo-input">
+                <label for="campoLocal">Local</label>
+                <input id="campoLocal" name="campoLocal" placeholder="ex.: Florianópolis-SC">
+                <span id="erroLocal" class="msg-erro"></span>
+            </div>
+
+            <div class="grupo-input">
+                <label for="campoPreco">Preço</label>
+                <input id="campoPreco" name="campoPreco" type="number" placeholder="ex.: R$ 79999.00" step="0.01">
+                <span id="erroPreco" class="msg-erro"></span>
+            </div>
+
+            <div class="grupo-input">
+                <label for="campoImagem"></label>
+                <input id="campoImagem" name="campoImagem" type="file" accept=".jpg, .jpeg, .png, .gif, .webp">
+                <span id="erroImagem" class="msg-erro"></span>
+            </div>
+            <button type="submit" class="btn-preto">Cadastrar</button>
+        </form>
+
+        <div id="listarAnunciosPerfil"></div>
+    </aside>
 </body>
 </html>
