@@ -6,6 +6,15 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
+const storage = multer.diskStorage({
+  destination: "public/uploads",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({ storage: storage });
+
 // fazendo a conexão com o PostgreSQL
 const pool = new Pool({
   user: 'postgres',
@@ -94,6 +103,7 @@ app.post('/api/interesses/:anuncio_id', async (req, res) => {
   res.json({ interesses: rows[0].total });
 });
 
+
 app.get('/api/perfil/:id', async (req, res) => {
   const { id } = req.params;
   const anuncios = await pool.query(
@@ -131,6 +141,22 @@ app.post('/api/mensagens/:anuncio_id', async (req, res) => {
   );
 
   res.json({ sucesso: 'Mensagem enviada com sucesso.' });
+});
+
+
+app. post('/api/anuncios', upload.single('imagem'), async (req, res) => {
+  const { titulo, localidade, preco, vendedor_id } = req.body;
+  if(!req.file) return res.status(400).json({ erro: 'Imagem é obrigatória.'});
+
+  const { rows } = await pool.query(
+    "INSERT INTO anuncios (titulo, localidade, preco, imagem, vendedor_id)VALUES ($1, $2, $3, $4, $5) RETURNING",
+    [titulo, localidade, preco, req.file.filename, vendedor_id]
+  );
+  
+  return res.status(201).json({
+    mensagem: 'Anúncio criado com sucesso.',
+    anuncio: rows[0]
+  })
 });
 
 app.listen(3000, () => {
