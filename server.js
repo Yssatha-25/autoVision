@@ -140,9 +140,8 @@ app.post('/api/mensagens/:anuncio_id', async (req, res) => {
     [anuncio_id, cliente_nome, cliente_contato, mensagem],
   );
 
-  res.json({ sucesso: 'Mensagem enviada com sucesso.' });
+  res.json({ok: true});
 });
-
 
 app. post('/api/anuncios', upload.single('imagem'), async (req, res) => {
   const { titulo, localidade, preco, vendedor_id } = req.body;
@@ -157,6 +156,15 @@ app. post('/api/anuncios', upload.single('imagem'), async (req, res) => {
     mensagem: 'Anúncio criado com sucesso.',
     anuncio: rows[0]
   })
+});
+
+app.delete('/api/anuncios/:id', async (req, res) => {
+  const { id } = req.params
+  const { rows } = await pool.query("DELETE FROM anuncios WHERE id = $1 - RETURNING", [id])
+
+  return res.status(200).json({
+    ok: "Anuncio excluído",
+    anuncio: rows})
 });
 
 app.listen(3000, () => {
