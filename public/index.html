@@ -114,5 +114,21 @@
             </div>
         </div>
     </dialog>
+
+    <dialog id="modalMensagem" class="overlay oculto">
+        <div class="modal">
+            <div class="modal-topo">
+                <h2>enviar Mensagem</h2>
+                <button id="fecharModalMensagem" class="btn-fechar">x</button>
+                <input type="text" id="mensagemNome" placeholder="Digite seu nome">
+                <input type="text" id="mensagemContato" placeholder="Digite telefone ou e-mail">
+                <textarea id="mensagemTexto" placeholder="Escreva sua mensagem"></textarea>
+                <span id="erroMensagem" class="erro"></span>
+                <div class="modal-botoes">
+                    <button id="btnEnviarMensagem" class="btn-preto"> Enviar</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
 </body>
 </html>

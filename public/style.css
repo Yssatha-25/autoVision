@@ -1,3 +1,14 @@
-body{
-    background-color: #430061;
+:root{
+    --azul-principal: #0b3d91;
+    --azul-escuro: #072a66;
+    --branco: #ffffff;
+    --cinza-claro: #f4f4f9;
+    --cinza-borda: #c7d3e0;
+    --interesse-ativo: #1e88e5;
+    --fonte: 'Inter', sans-serif;
+}
+
+/* Resetando o css dos itens */
+*{
+    box-sizing: border-box;
 }
